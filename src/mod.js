@@ -1,3 +1,5 @@
+/// <reference types="./mod.d.ts" />
+/// <reference lib="dom" />
 import { c3 } from './core.js'
 
 import './polyfill.js'
