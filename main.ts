@@ -48,3 +48,11 @@ src = src.replaceAll(/import '.+?'/g, (match) => {
 
 Deno.writeTextFileSync("src/mod.js", src);
 
+fetch("https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/types/c3/index.d.ts").then((m)=> {
+  if (m.status == 200) {
+    m.text().then((text)=> {
+      Deno.writeTextFileSync("src/mod.d.ts", text)
+    })
+  }
+})
+
