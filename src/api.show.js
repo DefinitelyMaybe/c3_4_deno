@@ -1,70 +1,70 @@
-import { Chart } from './core.js'
-import { isIE } from './util.js'
+import { Chart } from "./core.js";
+import { isIE } from "./util.js";
 
-Chart.prototype.show = function(targetIds, options) {
+Chart.prototype.show = function (targetIds, options) {
   var $$ = this.internal,
-    targets
+    targets;
 
-  targetIds = $$.mapToTargetIds(targetIds)
-  options = options || {}
+  targetIds = $$.mapToTargetIds(targetIds);
+  options = options || {};
 
-  $$.removeHiddenTargetIds(targetIds)
-  targets = $$.svg.selectAll($$.selectorTargets(targetIds))
+  $$.removeHiddenTargetIds(targetIds);
+  targets = $$.svg.selectAll($$.selectorTargets(targetIds));
 
   targets
     .transition()
-    .style('display', isIE() ? 'block' : 'initial', 'important')
-    .style('opacity', 1, 'important')
-    .call($$.endall, function() {
-      targets.style('opacity', null).style('opacity', 1)
-    })
+    .style("display", isIE() ? "block" : "initial", "important")
+    .style("opacity", 1, "important")
+    .call($$.endall, function () {
+      targets.style("opacity", null).style("opacity", 1);
+    });
 
   if (options.withLegend) {
-    $$.showLegend(targetIds)
+    $$.showLegend(targetIds);
   }
 
   $$.redraw({
     withUpdateOrgXDomain: true,
     withUpdateXDomain: true,
-    withLegend: true
-  })
-}
+    withLegend: true,
+  });
+};
 
-Chart.prototype.hide = function(targetIds, options) {
+Chart.prototype.hide = function (targetIds, options) {
   var $$ = this.internal,
-    targets
+    targets;
 
-  targetIds = $$.mapToTargetIds(targetIds)
-  options = options || {}
+  targetIds = $$.mapToTargetIds(targetIds);
+  options = options || {};
 
-  $$.addHiddenTargetIds(targetIds)
-  targets = $$.svg.selectAll($$.selectorTargets(targetIds))
+  $$.addHiddenTargetIds(targetIds);
+  targets = $$.svg.selectAll($$.selectorTargets(targetIds));
 
   targets
     .transition()
-    .style('opacity', 0, 'important')
-    .call($$.endall, function() {
-      targets.style('opacity', null).style('opacity', 0)
-      targets.style('display', 'none')
-    })
+    .style("opacity", 0, "important")
+    .call($$.endall, function () {
+      targets.style("opacity", null).style("opacity", 0);
+      targets.style("display", "none");
+    });
 
   if (options.withLegend) {
-    $$.hideLegend(targetIds)
+    $$.hideLegend(targetIds);
   }
 
   $$.redraw({
     withUpdateOrgXDomain: true,
     withUpdateXDomain: true,
-    withLegend: true
-  })
-}
+    withLegend: true,
+  });
+};
 
-Chart.prototype.toggle = function(targetIds, options) {
+Chart.prototype.toggle = function (targetIds, options) {
   var that = this,
-    $$ = this.internal
-  $$.mapToTargetIds(targetIds).forEach(function(targetId) {
+    $$ = this.internal;
+  $$.mapToTargetIds(targetIds).forEach(function (targetId) {
     $$.isTargetToShow(targetId)
       ? that.hide(targetId, options)
-      : that.show(targetId, options)
-  })
-}
+      : that.show(targetId, options);
+  });
+};

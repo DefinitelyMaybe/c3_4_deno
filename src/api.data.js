@@ -1,17 +1,17 @@
-import { Chart } from './core.js'
-import { isArray } from './util.js'
+import { Chart } from "./core.js";
+import { isArray } from "./util.js";
 
-Chart.prototype.data = function(targetIds) {
-  var targets = this.internal.data.targets
-  return typeof targetIds === 'undefined'
+Chart.prototype.data = function (targetIds) {
+  var targets = this.internal.data.targets;
+  return typeof targetIds === "undefined"
     ? targets
-    : targets.filter(function(t) {
-        return [].concat(targetIds).indexOf(t.id) >= 0
-      })
-}
-Chart.prototype.data.shown = function(targetIds) {
-  return this.internal.filterTargetsToShow(this.data(targetIds))
-}
+    : targets.filter(function (t) {
+      return [].concat(targetIds).indexOf(t.id) >= 0;
+    });
+};
+Chart.prototype.data.shown = function (targetIds) {
+  return this.internal.filterTargetsToShow(this.data(targetIds));
+};
 
 /**
  * Get values of the data loaded in the chart.
@@ -20,42 +20,42 @@ Chart.prototype.data.shown = function(targetIds) {
  * @param flat
  * @return {Array} Data values
  */
-Chart.prototype.data.values = function(targetId, flat = true) {
-  let values = null
+Chart.prototype.data.values = function (targetId, flat = true) {
+  let values = null;
 
   if (targetId) {
-    const targets = this.data(targetId)
+    const targets = this.data(targetId);
     if (targets && isArray(targets)) {
       values = targets.reduce((ret, v) => {
-        const dataValue = v.values.map(d => d.value)
+        const dataValue = v.values.map((d) => d.value);
         if (flat) {
-          ret = ret.concat(dataValue)
+          ret = ret.concat(dataValue);
         } else {
-          ret.push(dataValue)
+          ret.push(dataValue);
         }
-        return ret
-      }, [])
+        return ret;
+      }, []);
     }
   }
 
-  return values
-}
-Chart.prototype.data.names = function(names) {
-  this.internal.clearLegendItemTextBoxCache()
-  return this.internal.updateDataAttributes('names', names)
-}
-Chart.prototype.data.colors = function(colors) {
-  return this.internal.updateDataAttributes('colors', colors)
-}
-Chart.prototype.data.axes = function(axes) {
-  return this.internal.updateDataAttributes('axes', axes)
-}
+  return values;
+};
+Chart.prototype.data.names = function (names) {
+  this.internal.clearLegendItemTextBoxCache();
+  return this.internal.updateDataAttributes("names", names);
+};
+Chart.prototype.data.colors = function (colors) {
+  return this.internal.updateDataAttributes("colors", colors);
+};
+Chart.prototype.data.axes = function (axes) {
+  return this.internal.updateDataAttributes("axes", axes);
+};
 
-Chart.prototype.data.stackNormalized = function(normalized) {
+Chart.prototype.data.stackNormalized = function (normalized) {
   if (normalized === undefined) {
-    return this.internal.isStackNormalized()
+    return this.internal.isStackNormalized();
   }
 
-  this.internal.config.data_stack_normalize = !!normalized
-  this.internal.redraw()
-}
+  this.internal.config.data_stack_normalize = !!normalized;
+  this.internal.redraw();
+};

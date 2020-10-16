@@ -1,69 +1,67 @@
-import CLASS from './class.js'
-import { Chart } from './core.js'
+import CLASS from "./class.js";
+import { Chart } from "./core.js";
 
-Chart.prototype.focus = function(targetIds) {
+Chart.prototype.focus = function (targetIds) {
   var $$ = this.internal,
-    candidates
+    candidates;
 
-  targetIds = $$.mapToTargetIds(targetIds)
-  ;(candidates = $$.svg.selectAll(
-    $$.selectorTargets(targetIds.filter($$.isTargetToShow, $$))
-  )),
-    this.revert()
-  this.defocus()
-  candidates.classed(CLASS.focused, true).classed(CLASS.defocused, false)
+  targetIds = $$.mapToTargetIds(targetIds);
+  (candidates = $$.svg.selectAll(
+    $$.selectorTargets(targetIds.filter($$.isTargetToShow, $$)),
+  )), this.revert();
+  this.defocus();
+  candidates.classed(CLASS.focused, true).classed(CLASS.defocused, false);
   if ($$.hasArcType()) {
-    $$.expandArc(targetIds)
+    $$.expandArc(targetIds);
   }
-  $$.toggleFocusLegend(targetIds, true)
+  $$.toggleFocusLegend(targetIds, true);
 
-  $$.focusedTargetIds = targetIds
-  $$.defocusedTargetIds = $$.defocusedTargetIds.filter(function(id) {
-    return targetIds.indexOf(id) < 0
-  })
-}
+  $$.focusedTargetIds = targetIds;
+  $$.defocusedTargetIds = $$.defocusedTargetIds.filter(function (id) {
+    return targetIds.indexOf(id) < 0;
+  });
+};
 
-Chart.prototype.defocus = function(targetIds) {
+Chart.prototype.defocus = function (targetIds) {
   var $$ = this.internal,
-    candidates
+    candidates;
 
-  targetIds = $$.mapToTargetIds(targetIds)
-  ;(candidates = $$.svg.selectAll(
-    $$.selectorTargets(targetIds.filter($$.isTargetToShow, $$))
-  )),
-    candidates.classed(CLASS.focused, false).classed(CLASS.defocused, true)
+  targetIds = $$.mapToTargetIds(targetIds);
+  (candidates = $$.svg.selectAll(
+    $$.selectorTargets(targetIds.filter($$.isTargetToShow, $$)),
+  )), candidates.classed(CLASS.focused, false).classed(CLASS.defocused, true);
   if ($$.hasArcType()) {
-    $$.unexpandArc(targetIds)
+    $$.unexpandArc(targetIds);
   }
-  $$.toggleFocusLegend(targetIds, false)
+  $$.toggleFocusLegend(targetIds, false);
 
-  $$.focusedTargetIds = $$.focusedTargetIds.filter(function(id) {
-    return targetIds.indexOf(id) < 0
-  })
-  $$.defocusedTargetIds = targetIds
-}
+  $$.focusedTargetIds = $$.focusedTargetIds.filter(function (id) {
+    return targetIds.indexOf(id) < 0;
+  });
+  $$.defocusedTargetIds = targetIds;
+};
 
-Chart.prototype.revert = function(targetIds) {
+Chart.prototype.revert = function (targetIds) {
   var $$ = this.internal,
-    candidates
+    candidates;
 
-  targetIds = $$.mapToTargetIds(targetIds)
-  candidates = $$.svg.selectAll($$.selectorTargets(targetIds)) // should be for all targets
+  targetIds = $$.mapToTargetIds(targetIds);
+  candidates = $$.svg.selectAll($$.selectorTargets(targetIds)); // should be for all targets
 
-  candidates.classed(CLASS.focused, false).classed(CLASS.defocused, false)
+  candidates.classed(CLASS.focused, false).classed(CLASS.defocused, false);
   if ($$.hasArcType()) {
-    $$.unexpandArc(targetIds)
+    $$.unexpandArc(targetIds);
   }
   if ($$.config.legend_show) {
-    $$.showLegend(targetIds.filter($$.isLegendToShow.bind($$)))
+    $$.showLegend(targetIds.filter($$.isLegendToShow.bind($$)));
     $$.legend
       .selectAll($$.selectorLegends(targetIds))
-      .filter(function() {
-        return $$.d3.select(this).classed(CLASS.legendItemFocused)
+      .filter(function () {
+        return $$.d3.select(this).classed(CLASS.legendItemFocused);
       })
-      .classed(CLASS.legendItemFocused, false)
+      .classed(CLASS.legendItemFocused, false);
   }
 
-  $$.focusedTargetIds = []
-  $$.defocusedTargetIds = []
-}
+  $$.focusedTargetIds = [];
+  $$.defocusedTargetIds = [];
+};

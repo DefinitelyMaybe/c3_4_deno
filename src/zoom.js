@@ -1,48 +1,48 @@
-import { ChartInternal } from './core.js'
-import CLASS from './class.js'
+import { ChartInternal } from "./core.js";
+import CLASS from "./class.js";
 
-ChartInternal.prototype.initZoom = function() {
+ChartInternal.prototype.initZoom = function () {
   var $$ = this,
     d3 = $$.d3,
     config = $$.config,
-    startEvent
+    startEvent;
 
   $$.zoom = d3
     .zoom()
-    .on('start', function() {
-      if (config.zoom_type !== 'scroll') {
-        return
+    .on("start", function () {
+      if (config.zoom_type !== "scroll") {
+        return;
       }
 
-      var e = d3.event.sourceEvent
-      if (e && e.type === 'brush') {
-        return
+      var e = d3.event.sourceEvent;
+      if (e && e.type === "brush") {
+        return;
       }
-      startEvent = e
-      config.zoom_onzoomstart.call($$.api, e)
+      startEvent = e;
+      config.zoom_onzoomstart.call($$.api, e);
     })
-    .on('zoom', function() {
-      if (config.zoom_type !== 'scroll') {
-        return
+    .on("zoom", function () {
+      if (config.zoom_type !== "scroll") {
+        return;
       }
 
-      var e = d3.event.sourceEvent
-      if (e && e.type === 'brush') {
-        return
+      var e = d3.event.sourceEvent;
+      if (e && e.type === "brush") {
+        return;
       }
 
-      $$.redrawForZoom()
+      $$.redrawForZoom();
 
-      config.zoom_onzoom.call($$.api, $$.x.orgDomain())
+      config.zoom_onzoom.call($$.api, $$.x.orgDomain());
     })
-    .on('end', function() {
-      if (config.zoom_type !== 'scroll') {
-        return
+    .on("end", function () {
+      if (config.zoom_type !== "scroll") {
+        return;
       }
 
-      var e = d3.event.sourceEvent
-      if (e && e.type === 'brush') {
-        return
+      var e = d3.event.sourceEvent;
+      if (e && e.type === "brush") {
+        return;
       }
       // if click, do nothing. otherwise, click interaction will be canceled.
       if (
@@ -50,126 +50,129 @@ ChartInternal.prototype.initZoom = function() {
         startEvent.clientX === e.clientX &&
         startEvent.clientY === e.clientY
       ) {
-        return
+        return;
       }
-      config.zoom_onzoomend.call($$.api, $$.x.orgDomain())
-    })
+      config.zoom_onzoomend.call($$.api, $$.x.orgDomain());
+    });
 
-  $$.zoom.updateDomain = function() {
+  $$.zoom.updateDomain = function () {
     if (d3.event && d3.event.transform) {
-      if (config.axis_rotated && config.zoom_type === 'scroll' && d3.event.sourceEvent.type === 'mousemove') {
+      if (
+        config.axis_rotated && config.zoom_type === "scroll" &&
+        d3.event.sourceEvent.type === "mousemove"
+      ) {
         // we're moving the mouse in a rotated chart with zoom = "scroll", so we need rescaleY (i.e. vertical)
         $$.x.domain(d3.event.transform.rescaleY($$.subX).domain());
       } else {
         $$.x.domain(d3.event.transform.rescaleX($$.subX).domain());
       }
     }
-    return this
-  }
-  $$.zoom.updateExtent = function() {
+    return this;
+  };
+  $$.zoom.updateExtent = function () {
     this.scaleExtent([1, Infinity])
       .translateExtent([
         [0, 0],
-        [$$.width, $$.height]
+        [$$.width, $$.height],
       ])
       .extent([
         [0, 0],
-        [$$.width, $$.height]
-      ])
-    return this
-  }
-  $$.zoom.update = function() {
-    return this.updateExtent().updateDomain()
-  }
+        [$$.width, $$.height],
+      ]);
+    return this;
+  };
+  $$.zoom.update = function () {
+    return this.updateExtent().updateDomain();
+  };
 
-  return $$.zoom.updateExtent()
-}
-ChartInternal.prototype.zoomTransform = function(range) {
+  return $$.zoom.updateExtent();
+};
+ChartInternal.prototype.zoomTransform = function (range) {
   var $$ = this,
-    s = [$$.x(range[0]), $$.x(range[1])]
-  return $$.d3.zoomIdentity.scale($$.width / (s[1] - s[0])).translate(-s[0], 0)
-}
+    s = [$$.x(range[0]), $$.x(range[1])];
+  return $$.d3.zoomIdentity.scale($$.width / (s[1] - s[0])).translate(-s[0], 0);
+};
 
-ChartInternal.prototype.initDragZoom = function() {
-  const $$ = this
-  const d3 = $$.d3
-  const config = $$.config
-  const context = ($$.context = $$.svg)
-  const brushXPos = $$.margin.left + 20.5
-  const brushYPos = $$.margin.top + 0.5
+ChartInternal.prototype.initDragZoom = function () {
+  const $$ = this;
+  const d3 = $$.d3;
+  const config = $$.config;
+  const context = ($$.context = $$.svg);
+  const brushXPos = $$.margin.left + 20.5;
+  const brushYPos = $$.margin.top + 0.5;
 
-  if (!(config.zoom_type === 'drag' && config.zoom_enabled)) {
-    return
+  if (!(config.zoom_type === "drag" && config.zoom_enabled)) {
+    return;
   }
 
-  const getZoomedDomain = selection =>
-    selection && selection.map(x => $$.x.invert(x))
+  const getZoomedDomain = (selection) =>
+    selection && selection.map((x) => $$.x.invert(x));
 
   const brush = ($$.dragZoomBrush = d3
     .brushX()
-    .on('start', () => {
-      $$.api.unzoom()
+    .on("start", () => {
+      $$.api.unzoom();
 
-      $$.svg.select('.' + CLASS.dragZoom).classed('disabled', false)
+      $$.svg.select("." + CLASS.dragZoom).classed("disabled", false);
 
-      config.zoom_onzoomstart.call($$.api, d3.event.sourceEvent)
+      config.zoom_onzoomstart.call($$.api, d3.event.sourceEvent);
     })
-    .on('brush', () => {
-      config.zoom_onzoom.call($$.api, getZoomedDomain(d3.event.selection))
+    .on("brush", () => {
+      config.zoom_onzoom.call($$.api, getZoomedDomain(d3.event.selection));
     })
-    .on('end', () => {
+    .on("end", () => {
       if (d3.event.selection == null) {
-        return
+        return;
       }
 
-      const zoomedDomain = getZoomedDomain(d3.event.selection)
+      const zoomedDomain = getZoomedDomain(d3.event.selection);
 
       if (!config.zoom_disableDefaultBehavior) {
-        $$.api.zoom(zoomedDomain)
+        $$.api.zoom(zoomedDomain);
       }
 
-      $$.svg.select('.' + CLASS.dragZoom).classed('disabled', true)
+      $$.svg.select("." + CLASS.dragZoom).classed("disabled", true);
 
-      config.zoom_onzoomend.call($$.api, zoomedDomain)
-    }))
+      config.zoom_onzoomend.call($$.api, zoomedDomain);
+    }));
 
   context
-    .append('g')
+    .append("g")
     .classed(CLASS.dragZoom, true)
-    .attr('clip-path', $$.clipPath)
-    .attr('transform', 'translate(' + brushXPos + ',' + brushYPos + ')')
-    .call(brush)
-}
+    .attr("clip-path", $$.clipPath)
+    .attr("transform", "translate(" + brushXPos + "," + brushYPos + ")")
+    .call(brush);
+};
 
-ChartInternal.prototype.getZoomDomain = function() {
+ChartInternal.prototype.getZoomDomain = function () {
   var $$ = this,
     config = $$.config,
     d3 = $$.d3,
     min = d3.min([$$.orgXDomain[0], config.zoom_x_min]),
-    max = d3.max([$$.orgXDomain[1], config.zoom_x_max])
-  return [min, max]
-}
-ChartInternal.prototype.redrawForZoom = function() {
+    max = d3.max([$$.orgXDomain[1], config.zoom_x_max]);
+  return [min, max];
+};
+ChartInternal.prototype.redrawForZoom = function () {
   var $$ = this,
     d3 = $$.d3,
     config = $$.config,
     zoom = $$.zoom,
-    x = $$.x
+    x = $$.x;
   if (!config.zoom_enabled) {
-    return
+    return;
   }
   if ($$.filterTargetsToShow($$.data.targets).length === 0) {
-    return
+    return;
   }
 
-  zoom.update()
+  zoom.update();
 
   if (config.zoom_disableDefaultBehavior) {
-    return
+    return;
   }
 
   if ($$.isCategorized() && x.orgDomain()[0] === $$.orgXDomain[0]) {
-    x.domain([$$.orgXDomain[0] - 1e-10, x.orgDomain()[1]])
+    x.domain([$$.orgXDomain[0] - 1e-10, x.orgDomain()[1]]);
   }
 
   $$.redraw({
@@ -177,10 +180,10 @@ ChartInternal.prototype.redrawForZoom = function() {
     withY: config.zoom_rescale,
     withSubchart: false,
     withEventRect: false,
-    withDimension: false
-  })
+    withDimension: false,
+  });
 
-  if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'mousemove') {
-    $$.cancelClick = true
+  if (d3.event.sourceEvent && d3.event.sourceEvent.type === "mousemove") {
+    $$.cancelClick = true;
   }
-}
+};

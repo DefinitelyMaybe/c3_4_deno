@@ -1,21 +1,21 @@
-import { ChartInternal } from './chart-internal.js'
-import CLASS from './class.js'
+import { ChartInternal } from "./chart-internal.js";
+import CLASS from "./class.js";
 
-ChartInternal.prototype.initStanfordElements = function() {
-  var $$ = this
+ChartInternal.prototype.initStanfordElements = function () {
+  var $$ = this;
 
   // Avoid blocking eventRect
   $$.stanfordElements = $$.main
-    .select('.' + CLASS.chart)
-    .append('g')
-    .attr('class', CLASS.stanfordElements)
+    .select("." + CLASS.chart)
+    .append("g")
+    .attr("class", CLASS.stanfordElements);
 
-  $$.stanfordElements.append('g').attr('class', CLASS.stanfordLines)
-  $$.stanfordElements.append('g').attr('class', CLASS.stanfordTexts)
-  $$.stanfordElements.append('g').attr('class', CLASS.stanfordRegions)
-}
+  $$.stanfordElements.append("g").attr("class", CLASS.stanfordLines);
+  $$.stanfordElements.append("g").attr("class", CLASS.stanfordTexts);
+  $$.stanfordElements.append("g").attr("class", CLASS.stanfordRegions);
+};
 
-ChartInternal.prototype.updateStanfordElements = function(duration) {
+ChartInternal.prototype.updateStanfordElements = function (duration) {
   var $$ = this,
     main = $$.main,
     config = $$.config,
@@ -27,194 +27,226 @@ ChartInternal.prototype.updateStanfordElements = function(duration) {
     stanfordTextEnter,
     xvCustom = $$.xvCustom.bind($$),
     yvCustom = $$.yvCustom.bind($$),
-    countPointsInRegion = $$.countEpochsInRegion.bind($$)
+    countPointsInRegion = $$.countEpochsInRegion.bind($$);
 
   // Stanford-Lines
   stanfordLine = main
-    .select('.' + CLASS.stanfordLines)
-    .style('shape-rendering', 'geometricprecision')
-    .selectAll('.' + CLASS.stanfordLine)
-    .data(config.stanford_lines)
+    .select("." + CLASS.stanfordLines)
+    .style("shape-rendering", "geometricprecision")
+    .selectAll("." + CLASS.stanfordLine)
+    .data(config.stanford_lines);
 
   // enter
   stanfordLineEnter = stanfordLine
     .enter()
-    .append('g')
-    .attr('class', function(d) {
-      return CLASS.stanfordLine + (d['class'] ? ' ' + d['class'] : '')
-    })
+    .append("g")
+    .attr("class", function (d) {
+      return CLASS.stanfordLine + (d["class"] ? " " + d["class"] : "");
+    });
   stanfordLineEnter
-    .append('line')
-    .attr('x1', d =>
-      config.axis_rotated ? yvCustom(d, 'value_y1') : xvCustom(d, 'value_x1')
+    .append("line")
+    .attr(
+      "x1",
+      (d) =>
+        config.axis_rotated ? yvCustom(d, "value_y1") : xvCustom(d, "value_x1"),
     )
-    .attr('x2', d =>
-      config.axis_rotated ? yvCustom(d, 'value_y2') : xvCustom(d, 'value_x2')
+    .attr(
+      "x2",
+      (d) =>
+        config.axis_rotated ? yvCustom(d, "value_y2") : xvCustom(d, "value_x2"),
     )
-    .attr('y1', d =>
-      config.axis_rotated ? xvCustom(d, 'value_x1') : yvCustom(d, 'value_y1')
+    .attr(
+      "y1",
+      (d) =>
+        config.axis_rotated ? xvCustom(d, "value_x1") : yvCustom(d, "value_y1"),
     )
-    .attr('y2', d =>
-      config.axis_rotated ? xvCustom(d, 'value_x2') : yvCustom(d, 'value_y2')
+    .attr(
+      "y2",
+      (d) =>
+        config.axis_rotated ? xvCustom(d, "value_x2") : yvCustom(d, "value_y2"),
     )
-    .style('opacity', 0)
+    .style("opacity", 0);
 
   // update
-  $$.stanfordLines = stanfordLineEnter.merge(stanfordLine)
+  $$.stanfordLines = stanfordLineEnter.merge(stanfordLine);
   $$.stanfordLines
-    .select('line')
+    .select("line")
     .transition()
     .duration(duration)
-    .attr('x1', d =>
-      config.axis_rotated ? yvCustom(d, 'value_y1') : xvCustom(d, 'value_x1')
+    .attr(
+      "x1",
+      (d) =>
+        config.axis_rotated ? yvCustom(d, "value_y1") : xvCustom(d, "value_x1"),
     )
-    .attr('x2', d =>
-      config.axis_rotated ? yvCustom(d, 'value_y2') : xvCustom(d, 'value_x2')
+    .attr(
+      "x2",
+      (d) =>
+        config.axis_rotated ? yvCustom(d, "value_y2") : xvCustom(d, "value_x2"),
     )
-    .attr('y1', d =>
-      config.axis_rotated ? xvCustom(d, 'value_x1') : yvCustom(d, 'value_y1')
+    .attr(
+      "y1",
+      (d) =>
+        config.axis_rotated ? xvCustom(d, "value_x1") : yvCustom(d, "value_y1"),
     )
-    .attr('y2', d =>
-      config.axis_rotated ? xvCustom(d, 'value_x2') : yvCustom(d, 'value_y2')
+    .attr(
+      "y2",
+      (d) =>
+        config.axis_rotated ? xvCustom(d, "value_x2") : yvCustom(d, "value_y2"),
     )
-    .style('opacity', 1)
+    .style("opacity", 1);
 
   // exit
   stanfordLine
     .exit()
     .transition()
     .duration(duration)
-    .style('opacity', 0)
-    .remove()
+    .style("opacity", 0)
+    .remove();
 
   // Stanford-Text
   stanfordText = main
-    .select('.' + CLASS.stanfordTexts)
-    .selectAll('.' + CLASS.stanfordText)
-    .data(config.stanford_texts)
+    .select("." + CLASS.stanfordTexts)
+    .selectAll("." + CLASS.stanfordText)
+    .data(config.stanford_texts);
 
   // enter
   stanfordTextEnter = stanfordText
     .enter()
-    .append('g')
-    .attr('class', function(d) {
-      return CLASS.stanfordText + (d['class'] ? ' ' + d['class'] : '')
-    })
+    .append("g")
+    .attr("class", function (d) {
+      return CLASS.stanfordText + (d["class"] ? " " + d["class"] : "");
+    });
   stanfordTextEnter
-    .append('text')
-    .attr('x', d => (config.axis_rotated ? yvCustom(d, 'y') : xvCustom(d, 'x')))
-    .attr('y', d => (config.axis_rotated ? xvCustom(d, 'x') : yvCustom(d, 'y')))
-    .style('opacity', 0)
+    .append("text")
+    .attr(
+      "x",
+      (d) => (config.axis_rotated ? yvCustom(d, "y") : xvCustom(d, "x")),
+    )
+    .attr(
+      "y",
+      (d) => (config.axis_rotated ? xvCustom(d, "x") : yvCustom(d, "y")),
+    )
+    .style("opacity", 0);
 
   // update
-  $$.stanfordTexts = stanfordTextEnter.merge(stanfordText)
+  $$.stanfordTexts = stanfordTextEnter.merge(stanfordText);
   $$.stanfordTexts
-    .select('text')
+    .select("text")
     .transition()
     .duration(duration)
-    .attr('x', d => (config.axis_rotated ? yvCustom(d, 'y') : xvCustom(d, 'x')))
-    .attr('y', d => (config.axis_rotated ? xvCustom(d, 'x') : yvCustom(d, 'y')))
-    .text(function(d) {
-      return d.content
+    .attr(
+      "x",
+      (d) => (config.axis_rotated ? yvCustom(d, "y") : xvCustom(d, "x")),
+    )
+    .attr(
+      "y",
+      (d) => (config.axis_rotated ? xvCustom(d, "x") : yvCustom(d, "y")),
+    )
+    .text(function (d) {
+      return d.content;
     })
-    .style('opacity', 1)
+    .style("opacity", 1);
 
   // exit
   stanfordText
     .exit()
     .transition()
     .duration(duration)
-    .style('opacity', 0)
-    .remove()
+    .style("opacity", 0)
+    .remove();
 
   // Stanford-Regions
   stanfordRegion = main
-    .select('.' + CLASS.stanfordRegions)
-    .selectAll('.' + CLASS.stanfordRegion)
-    .data(config.stanford_regions)
+    .select("." + CLASS.stanfordRegions)
+    .selectAll("." + CLASS.stanfordRegion)
+    .data(config.stanford_regions);
 
   // enter
   stanfordRegionEnter = stanfordRegion
     .enter()
-    .append('g')
-    .attr('class', function(d) {
-      return CLASS.stanfordRegion + (d['class'] ? ' ' + d['class'] : '')
-    })
+    .append("g")
+    .attr("class", function (d) {
+      return CLASS.stanfordRegion + (d["class"] ? " " + d["class"] : "");
+    });
   stanfordRegionEnter
-    .append('polygon')
-    .attr('points', d => {
+    .append("polygon")
+    .attr("points", (d) => {
       return d.points
-        .map(value => {
+        .map((value) => {
           return [
-            config.axis_rotated ? yvCustom(value, 'y') : xvCustom(value, 'x'),
-            config.axis_rotated ? xvCustom(value, 'x') : yvCustom(value, 'y')
-          ].join(',')
+            config.axis_rotated ? yvCustom(value, "y") : xvCustom(value, "x"),
+            config.axis_rotated ? xvCustom(value, "x") : yvCustom(value, "y"),
+          ].join(",");
         })
-        .join(' ')
+        .join(" ");
     })
-    .style('opacity', 0)
+    .style("opacity", 0);
   stanfordRegionEnter
-    .append('text')
-    .attr('x', d => $$.getCentroid(d.points).x)
-    .attr('y', d => $$.getCentroid(d.points).y)
-    .style('opacity', 0)
+    .append("text")
+    .attr("x", (d) => $$.getCentroid(d.points).x)
+    .attr("y", (d) => $$.getCentroid(d.points).y)
+    .style("opacity", 0);
 
   // update
-  $$.stanfordRegions = stanfordRegionEnter.merge(stanfordRegion)
+  $$.stanfordRegions = stanfordRegionEnter.merge(stanfordRegion);
   $$.stanfordRegions
-    .select('polygon')
+    .select("polygon")
     .transition()
     .duration(duration)
-    .attr('points', d => {
+    .attr("points", (d) => {
       return d.points
-        .map(value => {
+        .map((value) => {
           return [
-            config.axis_rotated ? yvCustom(value, 'y') : xvCustom(value, 'x'),
-            config.axis_rotated ? xvCustom(value, 'x') : yvCustom(value, 'y')
-          ].join(',')
+            config.axis_rotated ? yvCustom(value, "y") : xvCustom(value, "x"),
+            config.axis_rotated ? xvCustom(value, "x") : yvCustom(value, "y"),
+          ].join(",");
         })
-        .join(' ')
+        .join(" ");
     })
-    .style('opacity', d => {
-      return d.opacity ? d.opacity : 0.2
-    })
+    .style("opacity", (d) => {
+      return d.opacity ? d.opacity : 0.2;
+    });
   $$.stanfordRegions
-    .select('text')
+    .select("text")
     .transition()
     .duration(duration)
-    .attr('x', d =>
-      config.axis_rotated
-        ? yvCustom($$.getCentroid(d.points), 'y')
-        : xvCustom($$.getCentroid(d.points), 'x')
+    .attr(
+      "x",
+      (d) =>
+        config.axis_rotated
+          ? yvCustom($$.getCentroid(d.points), "y")
+          : xvCustom($$.getCentroid(d.points), "x"),
     )
-    .attr('y', d =>
-      config.axis_rotated
-        ? xvCustom($$.getCentroid(d.points), 'x')
-        : yvCustom($$.getCentroid(d.points), 'y')
+    .attr(
+      "y",
+      (d) =>
+        config.axis_rotated
+          ? xvCustom($$.getCentroid(d.points), "x")
+          : yvCustom($$.getCentroid(d.points), "y"),
     )
-    .text(function(d) {
+    .text(function (d) {
       if (d.text) {
-        var value, percentage, temp
+        var value, percentage, temp;
 
         if ($$.isStanfordGraphType()) {
-          temp = countPointsInRegion(d.points)
-          value = temp.value
-          percentage = temp.percentage
+          temp = countPointsInRegion(d.points);
+          value = temp.value;
+          percentage = temp.percentage;
         }
 
-        return d.text(value, percentage)
+        return d.text(value, percentage);
       }
 
-      return ''
+      return "";
     })
-    .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'middle')
-    .style('opacity', 1)
+    .attr("text-anchor", "middle")
+    .attr("dominant-baseline", "middle")
+    .style("opacity", 1);
   // exit
   stanfordRegion
     .exit()
     .transition()
     .duration(duration)
-    .style('opacity', 0)
-    .remove()
-}
+    .style("opacity", 0)
+    .remove();
+};

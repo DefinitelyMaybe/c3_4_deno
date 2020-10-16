@@ -1,18 +1,18 @@
-import { Chart } from './core.js'
+import { Chart } from "./core.js";
 
-Chart.prototype.x = function(x) {
-  var $$ = this.internal
+Chart.prototype.x = function (x) {
+  var $$ = this.internal;
   if (arguments.length) {
-    $$.updateTargetX($$.data.targets, x)
-    $$.redraw({ withUpdateOrgXDomain: true, withUpdateXDomain: true })
+    $$.updateTargetX($$.data.targets, x);
+    $$.redraw({ withUpdateOrgXDomain: true, withUpdateXDomain: true });
   }
-  return $$.data.xs
-}
-Chart.prototype.xs = function(xs) {
-  var $$ = this.internal
+  return $$.data.xs;
+};
+Chart.prototype.xs = function (xs) {
+  var $$ = this.internal;
   if (arguments.length) {
-    $$.updateTargetXs($$.data.targets, xs)
-    $$.redraw({ withUpdateOrgXDomain: true, withUpdateXDomain: true })
+    $$.updateTargetXs($$.data.targets, xs);
+    $$.redraw({ withUpdateOrgXDomain: true, withUpdateXDomain: true });
   }
-  return $$.data.xs
-}
+  return $$.data.xs;
+};

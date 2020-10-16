@@ -1,46 +1,46 @@
-import CLASS from './class.js'
-import { ChartInternal } from './core.js'
-import { getPathBox } from './util.js'
+import CLASS from "./class.js";
+import { ChartInternal } from "./core.js";
+import { getPathBox } from "./util.js";
 
-ChartInternal.prototype.drag = function(mouse) {
+ChartInternal.prototype.drag = function (mouse) {
   var $$ = this,
     config = $$.config,
     main = $$.main,
-    d3 = $$.d3
-  var sx, sy, mx, my, minX, maxX, minY, maxY
+    d3 = $$.d3;
+  var sx, sy, mx, my, minX, maxX, minY, maxY;
 
   if ($$.hasArcType()) {
-    return
+    return;
   }
   if (!config.data_selection_enabled) {
-    return
+    return;
   } // do nothing if not selectable
   if (!config.data_selection_multiple) {
-    return
+    return;
   } // skip when single selection because drag is used for multiple selection
 
-  sx = $$.dragStart[0]
-  sy = $$.dragStart[1]
-  mx = mouse[0]
-  my = mouse[1]
-  minX = Math.min(sx, mx)
-  maxX = Math.max(sx, mx)
-  minY = config.data_selection_grouped ? $$.margin.top : Math.min(sy, my)
-  maxY = config.data_selection_grouped ? $$.height : Math.max(sy, my)
+  sx = $$.dragStart[0];
+  sy = $$.dragStart[1];
+  mx = mouse[0];
+  my = mouse[1];
+  minX = Math.min(sx, mx);
+  maxX = Math.max(sx, mx);
+  minY = config.data_selection_grouped ? $$.margin.top : Math.min(sy, my);
+  maxY = config.data_selection_grouped ? $$.height : Math.max(sy, my);
 
   main
-    .select('.' + CLASS.dragarea)
-    .attr('x', minX)
-    .attr('y', minY)
-    .attr('width', maxX - minX)
-    .attr('height', maxY - minY)
+    .select("." + CLASS.dragarea)
+    .attr("x", minX)
+    .attr("y", minY)
+    .attr("width", maxX - minX)
+    .attr("height", maxY - minY);
   // TODO: binary search when multiple xs
   main
-    .selectAll('.' + CLASS.shapes)
-    .selectAll('.' + CLASS.shape)
-    .each(function(d, i) {
+    .selectAll("." + CLASS.shapes)
+    .selectAll("." + CLASS.shape)
+    .each(function (d, i) {
       if (!config.data_selection_isselectable(d)) {
-        return
+        return;
       }
       var shape = d3.select(this),
         isSelected = shape.classed(CLASS.SELECTED),
@@ -51,67 +51,67 @@ ChartInternal.prototype.drag = function(mouse) {
         _h,
         toggle,
         isWithin = false,
-        box
+        box;
       if (shape.classed(CLASS.circle)) {
-        _x = shape.attr('cx') * 1
-        _y = shape.attr('cy') * 1
-        toggle = $$.togglePoint
-        isWithin = minX < _x && _x < maxX && minY < _y && _y < maxY
+        _x = shape.attr("cx") * 1;
+        _y = shape.attr("cy") * 1;
+        toggle = $$.togglePoint;
+        isWithin = minX < _x && _x < maxX && minY < _y && _y < maxY;
       } else if (shape.classed(CLASS.bar)) {
-        box = getPathBox(this)
-        _x = box.x
-        _y = box.y
-        _w = box.width
-        _h = box.height
-        toggle = $$.togglePath
-        isWithin =
-          !(maxX < _x || _x + _w < minX) && !(maxY < _y || _y + _h < minY)
+        box = getPathBox(this);
+        _x = box.x;
+        _y = box.y;
+        _w = box.width;
+        _h = box.height;
+        toggle = $$.togglePath;
+        isWithin = !(maxX < _x || _x + _w < minX) &&
+          !(maxY < _y || _y + _h < minY);
       } else {
         // line/area selection not supported yet
-        return
+        return;
       }
-      if ((isWithin as any) ^ isIncluded) {
-        shape.classed(CLASS.INCLUDED, !isIncluded)
+      if ((isWithin) ^ isIncluded) {
+        shape.classed(CLASS.INCLUDED, !isIncluded);
         // TODO: included/unincluded callback here
-        shape.classed(CLASS.SELECTED, !isSelected)
-        toggle.call($$, !isSelected, shape, d, i)
+        shape.classed(CLASS.SELECTED, !isSelected);
+        toggle.call($$, !isSelected, shape, d, i);
       }
-    })
-}
+    });
+};
 
-ChartInternal.prototype.dragstart = function(mouse) {
+ChartInternal.prototype.dragstart = function (mouse) {
   var $$ = this,
-    config = $$.config
+    config = $$.config;
   if ($$.hasArcType()) {
-    return
+    return;
   }
   if (!config.data_selection_enabled) {
-    return
+    return;
   } // do nothing if not selectable
-  $$.dragStart = mouse
+  $$.dragStart = mouse;
   $$.main
-    .select('.' + CLASS.chart)
-    .append('rect')
-    .attr('class', CLASS.dragarea)
-    .style('opacity', 0.1)
-  $$.dragging = true
-}
+    .select("." + CLASS.chart)
+    .append("rect")
+    .attr("class", CLASS.dragarea)
+    .style("opacity", 0.1);
+  $$.dragging = true;
+};
 
-ChartInternal.prototype.dragend = function() {
+ChartInternal.prototype.dragend = function () {
   var $$ = this,
-    config = $$.config
+    config = $$.config;
   if ($$.hasArcType()) {
-    return
+    return;
   }
   if (!config.data_selection_enabled) {
-    return
+    return;
   } // do nothing if not selectable
   $$.main
-    .select('.' + CLASS.dragarea)
+    .select("." + CLASS.dragarea)
     .transition()
     .duration(100)
-    .style('opacity', 0)
-    .remove()
-  $$.main.selectAll('.' + CLASS.shape).classed(CLASS.INCLUDED, false)
-  $$.dragging = false
-}
+    .style("opacity", 0)
+    .remove();
+  $$.main.selectAll("." + CLASS.shape).classed(CLASS.INCLUDED, false);
+  $$.dragging = false;
+};

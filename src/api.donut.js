@@ -1,11 +1,11 @@
-import { Chart } from './core.js'
+import { Chart } from "./core.js";
 
-Chart.prototype.donut = function() {}
+Chart.prototype.donut = function () {};
 
-Chart.prototype.donut.padAngle = function(padAngle) {
+Chart.prototype.donut.padAngle = function (padAngle) {
   if (padAngle === undefined) {
-    return this.internal.config.donut_padAngle
+    return this.internal.config.donut_padAngle;
   }
-  this.internal.config.donut_padAngle = padAngle
-  this.flush()
-}
+  this.internal.config.donut_padAngle = padAngle;
+  this.flush();
+};

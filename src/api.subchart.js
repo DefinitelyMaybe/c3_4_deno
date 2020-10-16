@@ -1,58 +1,58 @@
-import { Chart } from './core.js'
+import { Chart } from "./core.js";
 
-Chart.prototype.subchart = function() {}
+Chart.prototype.subchart = function () {};
 
-Chart.prototype.subchart.isShown = function() {
-  const $$ = this.internal
+Chart.prototype.subchart.isShown = function () {
+  const $$ = this.internal;
 
-  return $$.config.subchart_show
-}
+  return $$.config.subchart_show;
+};
 
-Chart.prototype.subchart.show = function() {
-  const $$ = this.internal
+Chart.prototype.subchart.show = function () {
+  const $$ = this.internal;
 
   if ($$.config.subchart_show) {
-    return
+    return;
   }
 
-  $$.config.subchart_show = true
+  $$.config.subchart_show = true;
 
   // insert DOM
-  $$.initSubchart()
+  $$.initSubchart();
 
   // update dimensions with sub chart now visible
-  $$.updateDimension()
+  $$.updateDimension();
 
   // insert brush (depends on sizes previously updated)
-  $$.initSubchartBrush()
+  $$.initSubchartBrush();
 
   // attach data
-  $$.updateTargetsForSubchart($$.getTargets())
+  $$.updateTargetsForSubchart($$.getTargets());
 
   // reset fade-in state
-  $$.mapToIds($$.data.targets).forEach(function(id) {
-    $$.withoutFadeIn[id] = false
-  })
+  $$.mapToIds($$.data.targets).forEach(function (id) {
+    $$.withoutFadeIn[id] = false;
+  });
 
   // redraw chart !
-  $$.updateAndRedraw()
+  $$.updateAndRedraw();
 
   // update visible targets !
-  $$.showTargets()
-}
+  $$.showTargets();
+};
 
-Chart.prototype.subchart.hide = function() {
-  const $$ = this.internal
+Chart.prototype.subchart.hide = function () {
+  const $$ = this.internal;
 
   if (!$$.config.subchart_show) {
-    return
+    return;
   }
 
-  $$.config.subchart_show = false
+  $$.config.subchart_show = false;
 
   // remove DOM
-  $$.removeSubchart()
+  $$.removeSubchart();
 
   // re-render chart
-  $$.redraw()
-}
+  $$.redraw();
+};
