@@ -1,3 +1,6 @@
+# deprecated notice
+As of learning about skypack.dev via the [updated deno manual](https://deno.land/manual@v1.7.0/typescript/types#deno-friendly-cdns), I strongly discourage anyone from using this remix of the c3 library.
+
 # c3_4_deno
 A simple transformation of c3 for use within a deno workflow
 
